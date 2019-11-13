@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.business.mapper.OrderMapper">
+
+    <insert id="setDeal" parameterType="com.example.business.entiy.Deal" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
+
+       INSERT INTO dsc_deal (
+        userid,
+        type,
+        deal_total,
+        price,
+        totalmoney,
+        status,
+        vagetables_id,
+        mobile_phone,
+        creatime,
+        updatetime
+        )VALUES(
+            #{userid,jdbcType=INTEGER},  #{type,jdbcType=INTEGER},
+            #{deal_total,jdbcType=DOUBLE},#{price,jdbcType=DOUBLE},#{totalmoney,jdbcType=DOUBLE},
+            #{status,jdbcType=INTEGER},#{vagetables_id,jdbcType=INTEGER},#{mobile_phone,jdbcType=INTEGER},
+		    #{creatime,jdbcType=DATE},#{updatetime,jdbcType=DATE}
+		    )
+  </insert>
+
+    <insert id="generationOrder" parameterType="com.example.business.entiy.Order" >
+
+       INSERT INTO dsc_order (
+        order_sn,
+        userid,
+        passid,
+        total_price,
+        order_status,
+        deal_id,
+        sku_id,
+        total,
+        price,
+        file_type,
+        buys_fee,
+        pay_fee,
+        lock_id,
+        create_time,
+        update_time
+        )VALUES(
+            #{order_sn,jdbcType=VARCHAR},  #{userid,jdbcType=INTEGER},
+            #{passid,jdbcType=INTEGER},#{total_price,jdbcType=DOUBLE},#{order_status,jdbcType=INTEGER},
+            #{deal_id,jdbcType=INTEGER},#{sku_id,jdbcType=INTEGER},
+            #{total,jdbcType=DOUBLE},#{price,jdbcType=DOUBLE},#{file_type,jdbcType=INTEGER},
+            #{buys_fee,jdbcType=DOUBLE},#{pay_fee,jdbcType=DOUBLE},#{lock_id,jdbcType=INTEGER},
+		    #{create_time,jdbcType=DATE},#{update_time,jdbcType=DATE}
+		    )
+  </insert>
+    <update id="updateStatus" parameterType="String">
+    update dsc_order
+    set order_status = #{status,jdbcType=INTEGER}
+    where userid = #{userid,jdbcType=INTEGER}
+    and lock_id = #{lock_id,jdbcType=INTEGER}
+  </update>
+    <update id="completeOrder" parameterType="String">
+    update dsc_order
+    set order_status = #{status,jdbcType=INTEGER},
+    where userid = #{userid,jdbcType=INTEGER}
+    and lock_id = #{lock_id,jdbcType=INTEGER}
+    and order_status = 2
+  </update>
+    <update id="cancelOrder" parameterType="String">
+    update dsc_order
+    set order_status = #{status,jdbcType=INTEGER},
+    where userid = #{userid,jdbcType=INTEGER}
+    and lock_id = #{lock_id,jdbcType=INTEGER}
+    and order_status = 4
+  </update>
+
+    <update id="AssetReduction" parameterType="String">
+    update dsc_deal
+    set status = #{status,jdbcType=INTEGER},
+    where userid = #{userid,jdbcType=INTEGER}
+    and type = #{type,jdbcType=INTEGER}
+    and status = 3
+  </update>
+</mapper>

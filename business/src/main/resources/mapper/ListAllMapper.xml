@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.business.mapper.ListAllMapper">
+
+  <resultMap id="listAllResultMap" type="java.util.HashMap">
+    <id column="user_name" jdbcType="VARCHAR" property="user_name" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="vagetables_name" jdbcType="VARCHAR" property="vagetables_name" />
+    <result column="surplus" jdbcType="VARCHAR" property="surplus" />
+    <result column="price" jdbcType="VARCHAR" property="price" />
+  </resultMap>
+
+  <select id="listAll" parameterType="String" resultMap="listAllResultMap">
+--     SELECT u.user_name,d.type, v.vagetables_name,dv.surplus,d.price FROM `dsc_users` u
+--     LEFT JOIN dsc_deal d on u.user_id = d.userid
+--     LEFT JOIN dsc_name_of_vagetables v on d.vagetables_id = v.vagetables_id
+--     LEFT JOIN dsc_vagetables dv on v.vagetables_id = dv.vagetables_id
+--     LEFT JOIN dsc_order o on u.user_id = o.userid
+--     ORDER BY v.vagetables_name DESC
+--     LIMIT 0,100;
+
+      SELECT
+          u.user_name,
+          d.type,
+          v.vagetables_name,
+          dv.surplus,
+          d.price
+      FROM
+          dsc_users u
+      LEFT JOIN dsc_deal d ON u.user_id = d.userid
+      LEFT JOIN dsc_name_of_vagetables v ON d.vagetables_id = v.vagetables_id
+      LEFT JOIN dsc_vagetables dv ON v.vagetables_id = dv.vagetables_id
+      LEFT JOIN dsc_order o ON u.user_id = o.userid
+      WHERE
+          o.order_status = 4
+      AND u.user_name =  #{userName,jdbcType=VARCHAR}
+      AND v.vagetables_name =  #{vagetablesName,jdbcType=VARCHAR}
+--       AND v.frozen = 0
+      AND d.type =  #{type,jdbcType=VARCHAR}
+      ORDER BY
+          v.vagetables_name DESC
+      LIMIT 0,100;
+
+
+  </select>
+
+</mapper>

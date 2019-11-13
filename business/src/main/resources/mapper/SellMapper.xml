@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.business.mapper.SellMapper">
+
+  <resultMap id="goSellResultMap" type="java.util.HashMap">
+    <id column="paypwd_id" jdbcType="INTEGER" property="paypwd_id" />
+      <result column="user_id" jdbcType="INTEGER" property="user_id" />
+  </resultMap>
+
+    <resultMap id="assetsResultMap" type="java.util.HashMap">
+        <id column="id" jdbcType="INTEGER" property="user_id" />
+        <result column="user_id" jdbcType="INTEGER" property="user_id" />
+        <result column="vagetables_id" jdbcType="INTEGER" property="vagetables_id" />
+        <result column="surplus" jdbcType="INTEGER" property="surplus" />
+        <result column="frozen" jdbcType="INTEGER" property="frozen" />
+
+    </resultMap>
+
+  <select id="VerificationYJ" parameterType="String" resultMap="goSellResultMap">
+    SELECT
+	    paypwd_id,
+	    user_id
+    FROM
+        dsc_users_paypwd
+    WHERE
+        user_id = #{sellUserId,jdbcType=INTEGER}
+    AND pay_password = #{jymm,jdbcType=INTEGER};
+  </select>
+
+    <select id="selectAssets" parameterType="String" resultMap="assetsResultMap">
+        SELECT
+            id,
+            user_id,
+            vagetables_id,
+            surplus,
+            frozen
+        FROM
+            dsc_vagetables
+        WHERE
+            user_id = #{sellUserId,jdbcType=INTEGER}
+        AND vagetables_id = #{type,jdbcType=INTEGER}
+        AND frozen = 0;
+    </select>
+
+    <insert id="goSell" parameterType="com.example.business.entiy.Platform">
+       INSERT INTO dsc_platform (
+        sell_user_id,
+        type,
+        num,
+        pice,
+        sum,
+        inputtime,
+        flag
+        )VALUES(
+            #{sellUserId,jdbcType=INTEGER},  #{type,jdbcType=VARCHAR},
+            #{num,jdbcType=DOUBLE},#{pice,jdbcType=DOUBLE},#{sum,jdbcType=DOUBLE},
+		    #{inputTime,jdbcType=DATE},#{flag,jdbcType=INTEGER}
+		    )
+  </insert>
+
+  <update id="AssetReduction" parameterType="com.example.business.entiy.Platform">
+    update dsc_vagetables
+    set  surplus = #{surplus,jdbcType=DOUBLE},
+        frozen =  1
+    where user_id = #{sellUserId,jdbcType=INTEGER}
+    AND vagetables_id = #{type,jdbcType=INTEGER}
+  </update>
+
+  <update id="goThaw" parameterType="com.example.business.entiy.Platform">
+    update dsc_vagetables
+    set frozen =  #{frozen,jdbcType=INTEGER}
+    where user_id = #{sellUserId,jdbcType=INTEGER}
+    AND vagetables_id = #{type,jdbcType=INTEGER}
+  </update>
+
+</mapper>

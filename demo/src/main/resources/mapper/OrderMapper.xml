@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.OrderMapper">
+
+    <insert id="setDeal" parameterType="com.example.demo.entiy.Deal" keyProperty="id" useGeneratedKeys="true">
+       INSERT INTO dsc_deal (
+        userid,
+        type,
+        deal_total,
+        price,
+        totalmoney,
+        status,
+        vagetables_id,
+        mobile_phone,
+        creatime
+        )VALUES(
+            #{userid,jdbcType=INTEGER},  #{type,jdbcType=INTEGER},
+            #{dealTotal,jdbcType=DOUBLE},#{pice,jdbcType=DOUBLE},#{totalmoney,jdbcType=DOUBLE},
+            #{status,jdbcType=INTEGER},#{vagetables_id,jdbcType=INTEGER},#{mobile_phone,jdbcType=INTEGER}
+		    #{creatime,jdbcType=DATE}
+		    )
+  </insert>
+
+    <insert id="generationOrder" parameterType="com.example.demo.entiy.Order" keyProperty="id" useGeneratedKeys="true">
+       INSERT INTO dsc_order (
+        order_sn,
+        userid,
+        passid,
+        total_price,
+        order_status,
+        deal_id,
+        sku_id,
+        total,
+        price,
+        file_type,
+        buys_fee,
+        pay_fee,
+        lock_id,
+        create_time
+        )VALUES(
+            #{order.set,jdbcType=VARCHAR},  #{userid,jdbcType=INTEGER},
+            #{passid,jdbcType=INTEGER},#{total_price,jdbcType=DOUBLE},#{order_status,jdbcType=INTEGER},
+            #{deal_id,jdbcType=INTEGER},#{sku_id,jdbcType=INTEGER},
+            #{total,jdbcType=DOUBLE},#{price,jdbcType=DOUBLE},#{file_type,jdbcType=INTEGER},
+            #{buys_fee,jdbcType=DOUBLE},#{pay_fee,jdbcType=DOUBLE},#{lock_id,jdbcType=INTEGER},
+		    #{creatime,jdbcType=DATE}
+		    )
+  </insert>
+
+</mapper>
